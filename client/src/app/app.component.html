@@ -1,0 +1,25 @@
+<nav>
+  <mat-toolbar color="primary">
+    <div>
+      <a mat-button routerLink="/"><h3>CLIPABLE</h3></a>
+    </div>
+    <div>
+      <ng-template [ngIf]="!loggedIn()" [ngIfElse]="logoutButtons">
+        <a mat-button (click)="gotoLogin()">LOGIN</a>
+        <a mat-button (click)="gotoRegister()">REGISTER</a>
+      </ng-template>
+      <ng-template #logoutButtons>
+        <button mat-button [matMenuTriggerFor]="userOptions">
+          {{ username }}
+        </button>
+        <mat-menu #userOptions="matMenu" xPosition="before">
+          <button mat-menu-item (click)="logout()">LOGOUT</button>
+        </mat-menu>
+      </ng-template>
+    </div>
+  </mat-toolbar>
+</nav>
+
+<div appFileDrop [accept]="false" style="flex-grow: 1">
+  <router-outlet></router-outlet>
+</div>

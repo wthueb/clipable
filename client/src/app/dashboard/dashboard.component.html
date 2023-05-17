@@ -1,0 +1,30 @@
+<app-upload>
+  <div class="container">
+    <mat-grid-list cols="4">
+      <mat-grid-tile *ngFor="let clip of clips">
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title>
+              {{ clip.name }}
+            </mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <span
+              >Uploaded: {{ clip.createdAt | date : "medium" : "local" }}</span
+            >
+            <div class="actions">
+              <a routerLink="/{{ clip.key }}">{{ baseUrl }}/{{ clip.key }}</a>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="deleteClip(clip.key)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</app-upload>

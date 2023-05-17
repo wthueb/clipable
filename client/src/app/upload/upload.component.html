@@ -1,0 +1,9 @@
+<div
+  class="upload"
+  appFileDrop
+  (files)="uploadClip($event)"
+  (hovered)="setHovered($event)"
+  [class.hovered]="hovered"
+>
+  <ng-content></ng-content>
+</div>
