@@ -1,4 +1,4 @@
-<nav>
+<nav class="navbar">
   <mat-toolbar color="primary">
     <div>
       <a mat-button routerLink="/"><h3>CLIPABLE</h3></a>
@@ -10,7 +10,7 @@
       </ng-template>
       <ng-template #logoutButtons>
         <button mat-button [matMenuTriggerFor]="userOptions">
-          {{ username }}
+          {{ auth.username }}
         </button>
         <mat-menu #userOptions="matMenu" xPosition="before">
           <button mat-menu-item (click)="logout()">LOGOUT</button>

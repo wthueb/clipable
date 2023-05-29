@@ -14,41 +14,36 @@ export class BackendService {
 
   constructor(private http: HttpClient) {}
 
+  private fixClipUrl(clip: Clip): Clip {
+    const url = `${this.apiUrl}${clip.url}`;
+    const thumbnailUrl = `${this.apiUrl}${clip.thumbnailUrl}`;
+    clip.url = url;
+    clip.thumbnailUrl = thumbnailUrl;
+    return clip;
+  }
+
   getUser(username: string): Observable<UserResponse> {
-    return this.http
-      .get<UserResponse>(`${this.apiUrl}/user/${username}`)
-      .pipe(
-        map((user) => {
-          user.clips.forEach((clip) => {
-            const url = `${this.apiUrl}${clip.url}`;
-            clip.url = url;
-          });
-          return user;
-        })
-      );
+    return this.http.get<UserResponse>(`${this.apiUrl}/user/${username}`).pipe(
+      map((user) => {
+        user.clips = user.clips.map((clip) => this.fixClipUrl(clip));
+        return user;
+      })
+    );
   }
 
   getClip(key: string): Observable<Clip> {
-    return this.http.get<Clip>(`${this.apiUrl}/clip/${key}`).pipe(
-      map((clip) => {
-        const url = `${this.apiUrl}${clip.url}`;
-        clip.url = url;
-        return clip;
-      })
-    );
+    return this.http
+      .get<Clip>(`${this.apiUrl}/clip/${key}`)
+      .pipe(map((clip) => this.fixClipUrl(clip)));
   }
 
   uploadClip(clip: File): Observable<HttpEvent<UploadResponse>> {
     const formData = new FormData();
     formData.append('clip', clip);
 
-    return this.http.post<UploadResponse>(
-      `${this.apiUrl}/upload`,
-      formData,
-      {
-        reportProgress: true,
-        observe: 'events',
-      }
-    );
+    return this.http.post<UploadResponse>(`${this.apiUrl}/upload`, formData, {
+      reportProgress: true,
+      observe: 'events',
+    });
   }
 }

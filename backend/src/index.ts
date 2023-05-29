@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express, { Request, Response } from "express";
 import fileUpload from "express-fileupload";
 import { expressjwt, Request as JWTRequest } from "express-jwt";
+import ffmpeg from "ffmpeg";
 import fs from "fs";
 import jwt from "jsonwebtoken";
 import path from "path";
@@ -18,8 +19,13 @@ dotenv.config({
   ),
 });
 
-const CLIP_DIR = process.env.CLIP_DIR ?? "./clips";
-console.log(`using clip directory: ${CLIP_DIR}`);
+if (!process.env.STATIC_DIR) {
+  console.error("STATIC_DIR not set");
+  process.exit(1);
+}
+
+const STATIC_DIR = process.env.STATIC_DIR ?? "./static";
+console.log(`using static directory: ${STATIC_DIR}`);
 
 if (!process.env.MONGODB_CONNECTION_STRING) {
   console.error("MONGODB_CONNECTION_STRING not set");
@@ -55,8 +61,8 @@ app.use(express.json());
 app.use(fileUpload());
 
 if (process.env.NODE_ENV === "development") {
-  console.log("serving static files from /clips");
-  app.use("/clips", express.static(CLIP_DIR));
+  console.log("serving static files through express at /static");
+  app.use("/static", express.static(STATIC_DIR));
 }
 
 function generateKey(): string {
@@ -74,6 +80,7 @@ interface ClipResponse {
   createdBy: string;
   createdAt: Date;
   url: string;
+  thumbnailUrl: string;
 }
 
 function clipToResponse(clip: db.IClip): ClipResponse {
@@ -82,7 +89,8 @@ function clipToResponse(clip: db.IClip): ClipResponse {
     name: clip.name,
     createdBy: clip.createdBy.username,
     createdAt: clip.createdAt,
-    url: `/clips/${clip.filename}`,
+    url: `/static/clips/${clip.filename}`,
+    thumbnailUrl: `/static/thumbs/${clip.key}.png`,
   };
 }
 
@@ -158,7 +166,9 @@ app.route("/user/:username").get(async (req: Request, res: Response) => {
     return res.status(404).send(`unknown user: ${username}`);
   }
 
-  const clips = await db.Clip.find({ createdBy: user });
+  const clips = await db.Clip.find({ createdBy: user }).sort({
+    createdAt: "desc",
+  });
 
   const resp = {
     username: user.username,
@@ -204,7 +214,7 @@ app
     console.log(`uploading clip from ${username}: ${clip.name}`);
 
     const clips = fs
-      .readdirSync(CLIP_DIR)
+      .readdirSync(`${STATIC_DIR}/clips`)
       .map((clip) => clip.substring(0, clip.lastIndexOf(".")));
 
     let key = "";
@@ -227,7 +237,12 @@ app
 
     const filename = `${key}.${ext}`;
 
-    await clip.mv(`${CLIP_DIR}/${filename}`);
+    await clip.mv(`${STATIC_DIR}/clips/${filename}`);
+
+    const proc = await new ffmpeg(`${STATIC_DIR}/clips/${filename}`);
+    proc.addCommand("-ss", "00:00:00.000");
+    proc.addCommand("-vframes", "1");
+    await proc.save(`${STATIC_DIR}/thumbs/${key}.png`);
 
     const clipDoc = new db.Clip({
       key,

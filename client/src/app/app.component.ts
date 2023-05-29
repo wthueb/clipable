@@ -9,11 +9,7 @@ import { AuthService } from './auth.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent {
-  username: string = localStorage.getItem('username') ?? '';
-
-  constructor(private auth: AuthService, private router: Router) {
-    this.username = this.auth.username;
-  }
+  constructor(protected auth: AuthService, private router: Router) {}
 
   gotoLogin(): void {
     this.router.navigate(['/login'], {

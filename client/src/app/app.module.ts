@@ -17,6 +17,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -59,6 +62,8 @@ import { AuthInterceptor } from './auth.interceptor';
     MatInputModule,
     MatSnackBarModule,
     MatMenuModule,
+    MatTooltipModule,
+    ClipboardModule,
     AppRoutingModule,
   ],
   providers: [

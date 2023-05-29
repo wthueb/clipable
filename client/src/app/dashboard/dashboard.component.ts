@@ -12,10 +12,12 @@ import { environment } from '../../environments/environment';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-  clips: Clip[] = [];
   baseUrl = environment.baseUrl;
+  clips: Clip[] = [];
 
-  constructor(private backend: BackendService, private auth: AuthService) {
+  constructor(private backend: BackendService, private auth: AuthService) {}
+
+  ngOnInit(): void {
     this.backend.getUser(this.auth.username).subscribe((user) => {
       this.clips = user.clips;
     });
@@ -24,6 +26,4 @@ export class DashboardComponent implements OnInit {
   deleteClip(key: string): void {
     // TODO
   }
-
-  ngOnInit(): void {}
 }

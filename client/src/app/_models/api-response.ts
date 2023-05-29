@@ -14,6 +14,7 @@ export interface Clip {
   createdBy: string;
   createdAt: Date;
   url: string;
+  thumbnailUrl: string;
 }
 export interface UserResponse {
   username: string;
