@@ -143,7 +143,7 @@ app
   .get(async (req: Request, res: Response): Promise<any> => {
     const key = req.params.key;
 
-    console.debug(`got request for clip: ${key}`);
+    console.debug(`GET /clip/${key}`);
 
     const clip = await db.Clip.findOne({ key });
 
@@ -155,7 +155,47 @@ app
     console.log(`found clip: ${clip.name}`);
 
     return res.status(200).send(clipToResponse(clip));
-  });
+  })
+  .delete(
+    authenticated,
+    async (req: JWTRequest, res: Response): Promise<any> => {
+      const key = req.params.key;
+
+      console.debug(`DELETE /clip/${key}`);
+
+      const clip = await db.Clip.findOne({ key });
+
+      if (!clip) {
+        console.error(`could not find clip for key: ${key}`);
+        return res.status(404).send(`could not find clip for key: ${key}`);
+      }
+
+      console.log(`found clip: ${clip.name}`);
+
+      if (!req.auth) {
+        return res.status(401).send("no auth in request");
+      }
+
+      const username = req.auth["username"];
+
+      if (!username) {
+        return res.status(401).send("no username in auth");
+      }
+
+      if (clip.createdBy.username !== username) {
+        return res.status(401).send("clip not created by user");
+      }
+
+      console.log(`deleting clip: ${clip.key}`);
+
+      fs.unlinkSync(`${STATIC_DIR}/clips/${clip.filename}`);
+      await db.Clip.deleteOne({ key });
+
+      console.log(`clip deleted: ${clip.key}`);
+
+      return res.status(204).send();
+    }
+  );
 
 app.route("/user/:username").get(async (req: Request, res: Response) => {
   const username = req.params.username;

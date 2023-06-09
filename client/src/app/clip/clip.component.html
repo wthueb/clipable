@@ -4,16 +4,16 @@
       <mat-card>
         <mat-card-header>
           <mat-card-title>{{ clipInfo.name }}</mat-card-title>
-          <mat-card-subtitle>{{ clipInfo.createdBy }}</mat-card-subtitle>
+          <mat-card-subtitle
+            >{{ clipInfo.createdBy }} |
+            {{
+              clipInfo.createdAt | date : "short" : "local"
+            }}</mat-card-subtitle
+          >
         </mat-card-header>
         <mat-card-content class="content">
           <video id="clip" src="{{ clipInfo.url }}" controls loop></video>
         </mat-card-content>
-        <mat-card-footer>
-          <p *ngIf="clipInfo">
-            Upload date: {{ clipInfo.createdAt | date : "medium" : "local" }}
-          </p>
-        </mat-card-footer>
       </mat-card>
     </ng-template>
     <ng-template #noInfo>

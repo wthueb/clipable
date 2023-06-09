@@ -37,6 +37,10 @@ export class BackendService {
       .pipe(map((clip) => this.fixClipUrl(clip)));
   }
 
+  deleteClip(key: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/clip/${key}`);
+  }
+
   uploadClip(clip: File): Observable<HttpEvent<UploadResponse>> {
     const formData = new FormData();
     formData.append('clip', clip);

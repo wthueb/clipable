@@ -1,22 +1,20 @@
 <app-upload>
   <div class="container">
-    <mat-grid-list cols="5">
+    <mat-grid-list cols="4" gutterSize="1em">
       <mat-grid-tile *ngFor="let clip of clips">
         <mat-card>
           <mat-card-header>
-            <mat-card-title>
-              {{ clip.name }}
-            </mat-card-title>
+            <mat-card-title>{{ clip.name }}</mat-card-title>
+            <mat-card-subtitle>{{
+              clip.createdAt | date : "short" : "local"
+            }}</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content>
-            <img
-              mat-card-image
-              width="100%"
-              height="auto"
-              [src]="clip.thumbnailUrl"
-            />
-            <div class="actions">
-              <a routerLink="/{{ clip.key }}">{{ baseUrl }}/{{ clip.key }}</a>
+            <img mat-card-image [src]="clip.thumbnailUrl" />
+            <div class="details">
+              <p>
+                <a routerLink="/{{ clip.key }}">{{ baseUrl }}/{{ clip.key }}</a>
+              </p>
               <button
                 mat-icon-button
                 matTooltip="Copy link"
@@ -34,9 +32,6 @@
               </button>
             </div>
           </mat-card-content>
-          <mat-card-footer>
-            <p>UPLOADED: {{ clip.createdAt | date : "short" : "local" }}</p>
-          </mat-card-footer>
         </mat-card>
       </mat-grid-tile>
     </mat-grid-list>

@@ -16,6 +16,7 @@ export interface Clip {
   url: string;
   thumbnailUrl: string;
 }
+
 export interface UserResponse {
   username: string;
   clips: Clip[];

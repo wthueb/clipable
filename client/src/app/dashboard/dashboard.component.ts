@@ -24,6 +24,8 @@ export class DashboardComponent implements OnInit {
   }
 
   deleteClip(key: string): void {
-    // TODO
+    this.backend.deleteClip(key).subscribe(() => {
+      this.clips = this.clips.filter((clip) => clip.key !== key);
+    });
   }
 }
