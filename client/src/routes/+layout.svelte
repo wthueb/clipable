@@ -1,8 +1,11 @@
 <script lang="ts">
     import '../app.css';
     import { QueryClientProvider } from '@tanstack/svelte-query';
+    import { browser } from '$app/environment';
+    import { page } from '$app/stores';
     import type { LayoutData } from './$types';
     import { trpc } from '$lib/trpc';
+    import { webVitals } from '$lib/vitals';
 
     export let data: LayoutData;
 
@@ -10,6 +13,14 @@
 
     function login() {
         console.log('try login');
+    }
+
+    $: if (browser && data?.analyticsId) {
+        webVitals({
+            path: $page.url.pathname,
+            params: $page.params,
+            analyticsId: data.analyticsId,
+        });
     }
 </script>
 
