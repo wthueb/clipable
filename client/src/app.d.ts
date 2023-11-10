@@ -10,8 +10,8 @@ declare namespace App {
     }
 
     interface Locals {
-        supabase: import("@supabase/supabase-js").SupabaseClient;
-        getSession: () => Promise<import("@supabase/supabase-js").AuthSession | null>;
+        supabase: import('@supabase/supabase-js').SupabaseClient;
+        getSession: () => Promise<import('@supabase/supabase-js').AuthSession | null>;
     }
     // interface Error {}
     // interface Session {}

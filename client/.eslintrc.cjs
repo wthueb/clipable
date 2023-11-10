@@ -1,4 +1,4 @@
-const config = {
+module.exports = {
     root: true,
     env: {
         browser: true,
@@ -9,11 +9,7 @@ const config = {
         ecmaVersion: 2020,
         extraFileExtension: ['.svelte'],
     },
-    extends: [
-        'eslint:recommended',
-        'plugin:prettier/recommended',
-        'plugin:svelte/recommended',
-    ],
+    extends: ['eslint:recommended', 'plugin:prettier/recommended', 'plugin:svelte/recommended'],
     plugins: ['@typescript-eslint'],
     overrides: [
         {
@@ -58,5 +54,3 @@ const config = {
         'prettier/prettier': 'warn',
     },
 };
-
-export default config;
