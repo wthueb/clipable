@@ -17,12 +17,12 @@
         "@tanstack/svelte-query": "^5.4.3",
         "@trpc/client": "^10.43.1",
         "@trpc/server": "^10.43.1",
+        "@vercel/analytics": "^1.1.1",
         "devalue": "^4.3.2",
         "drizzle-orm": "^0.28.6",
         "postgres": "^3.4.3",
         "svelte": "^4.2.2",
         "trpc-svelte-query": "^2.0.3",
-        "web-vitals": "^3.5.0",
         "zod": "^3.22.4"
     },
     "devDependencies": {

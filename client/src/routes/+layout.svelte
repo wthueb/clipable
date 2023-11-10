@@ -1,26 +1,20 @@
 <script lang="ts">
     import '../app.css';
+
     import { QueryClientProvider } from '@tanstack/svelte-query';
-    import { browser } from '$app/environment';
-    import { page } from '$app/stores';
-    import type { LayoutData } from './$types';
+    import { inject } from '@vercel/analytics';
+    import { dev } from '$app/environment';
     import { trpc } from '$lib/trpc';
-    import { webVitals } from '$lib/vitals';
+    import type { LayoutData } from './$types';
 
     export let data: LayoutData;
+
+    inject({ mode: dev ? 'development' : 'production' });
 
     const queryClient = trpc.hydrateFromServer(data.trpc);
 
     function login() {
         console.log('try login');
-    }
-
-    $: if (browser && data?.analyticsId) {
-        webVitals({
-            path: $page.url.pathname,
-            params: $page.params,
-            analyticsId: data.analyticsId,
-        });
     }
 </script>
 
